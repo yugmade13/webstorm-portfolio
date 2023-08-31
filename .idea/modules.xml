@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/next-jetbrains.iml" filepath="$PROJECT_DIR$/.idea/next-jetbrains.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../Front End Web/Portfolio/next-portfolio/.idea/next-portfolio.iml" filepath="$PROJECT_DIR$/../../Front End Web/Portfolio/next-portfolio/.idea/next-portfolio.iml" />
     </modules>
   </component>
 </project>

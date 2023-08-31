@@ -2,26 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer components {
+  .header-gradient {
+    background: rgb(255, 255, 255);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(52, 76, 125, 1) 27%, rgba(255, 255, 255, 0) 100%);
   }
-}
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  .circle {
+    @apply block w-3 h-3 border border-gray5 rounded-full
+  }
+
+  .icon {
+    @apply p-1.5 rounded-md hover:bg-gray8 hover:bg-opacity-30
+  }
+
+  .active {
+    @apply bg-blue-primary
+  }
+
+  .active-navbar::before {
+    @apply content-[''] h-0.5 w-full bg-gray7 absolute bottom-0 left-0 rounded-full
+  }
+
+  .text-icon {
+    @apply px-2 py-1.5 cursor-pointer rounded-md hover:bg-gray8 hover:bg-opacity-30
+  }
+
+  .height {
+    height: calc(100vh - 40px - 29px);
+  }
+
+  .button-active {
+    @apply active:ring-2 active:ring-blue-primary active:ring-offset-2 active:ring-offset-gray-primary
+  }
+
+  .typing-text {
+    @apply relative w-max
+  }
+
+  .typing-text::before,
+  .typing-text::after {
+    @apply content-[''] absolute top-0 right-0 bottom-0 left-0
+  }
+
+  .typing-text::before {
+    background: #1E1F22;
+    animation: typewriter 4s steps(31) forwards;
+  }
+
+  .typing-text::after {
+    width: .125em;
+    background: #DFE1E5;
+    animation:
+      typewriter 4s steps(31) forwards,
+      blink 800ms steps(31) infinite;
+  }
+
+  @keyframes typewriter {
+    to {
+      left: 100%;
+    }
+  }
+
+  @keyframes blink {
+    to {
+      background: transparent;
+    }
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose p code,
+  .prose p a,
+  .prose p strong,
+  .prose blockquote p,
+  .prose table thead tr th {
+    @apply text-gray10
+  }
 }
