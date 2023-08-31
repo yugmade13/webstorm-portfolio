@@ -60,12 +60,12 @@ const inter = localFont({
 const jetbrains = localFont({
   src: [
     {
-      path: '../public/font/JetbrainsMono-Medium.ttf',
+      path: '../public/font/JetBrainsMono-Medium.ttf',
       weight: '500',
       style: 'medium',
     },
     {
-      path: '../public/font/JetbrainsMono-Bold.ttf',
+      path: '../public/font/JetBrainsMono-Bold.ttf',
       weight: '700',
       style: 'bold',
     },

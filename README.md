@@ -12,8 +12,6 @@ A Webstorm themed developer portfolio website built with Next.js and deployed on
 
 ## Running Locally
 
-This application requires Node.js v16.13+.
-
 ```bash
 git clone https://github.com/yugmade13/webstorm-portfolio.git
 cd webstorm-portfolio
