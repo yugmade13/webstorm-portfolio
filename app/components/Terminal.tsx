@@ -25,6 +25,7 @@ export default function Terminal() {
               </li>
             </ul>
             <button
+              aria-label="Close Terminal"
               onClick={() => setIsTerminalOpen(!isTerminalOpen)}
               type="button"
               className="icon"

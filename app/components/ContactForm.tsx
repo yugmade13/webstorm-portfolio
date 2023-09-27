@@ -64,6 +64,7 @@ export default function ContactForm() {
         </div>
         <div className="flex justify-end mt-6">
           <button
+            aria-label="Send Message"
             disabled={state.submitting}
             type="submit"
             className="text-medium font-sans text-white px-2 py-1.5 bg-blue-primary rounded-md button-active"

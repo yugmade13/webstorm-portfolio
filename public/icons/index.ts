@@ -26,6 +26,7 @@ import Search from './search.svg';
 import Settings from './settings.svg';
 import Structure from './structure.svg';
 import Terminal from './terminal.svg';
+import Text from './text.svg';
 import Typescript from './typescript.svg';
 import Unlock from './unlocked.svg';
 import UserPlus from './userplus.svg';
@@ -61,6 +62,7 @@ export {
   Settings,
   Structure,
   Terminal,
+  Text,
   Typescript,
   Unlock,
   UserPlus,

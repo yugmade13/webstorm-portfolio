@@ -15,6 +15,7 @@ export default function SidebarMenu() {
           <span className="font-semibold">Project</span>
           <div className="flex items-center">
             <button
+              aria-label="Collapse All"
               onClick={() => setIsFolderOpen(true)}
               type="button"
               className="icon"
@@ -22,6 +23,7 @@ export default function SidebarMenu() {
               <CollapseAll />
             </button>
             <button
+              aria-label="Expand All"
               onClick={() => setIsFolderOpen(false)}
               type="button"
               className="icon"
@@ -29,6 +31,7 @@ export default function SidebarMenu() {
               <ExpandAll />
             </button>
             <button
+              aria-label="Close Sidebar"
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               type="button"
               className="icon"

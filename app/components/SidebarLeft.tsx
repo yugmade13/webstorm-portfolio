@@ -25,6 +25,7 @@ export default function SidebarLeft() {
       <div className="h-full flex flex-col justify-between items-center py-2">
         <div className="flex flex-col items-center gap-y-2">
           <button
+            aria-label="Open Sidebar"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             type="button"
             className={`${pathname === '/' ? 'active' : ''} icon`}
@@ -36,6 +37,8 @@ export default function SidebarLeft() {
 
             return (
               <Link
+                aria-label={link.name}
+                title={link.name}
                 key={link.title}
                 href={link.path}
                 className={`${pathname === link.path ? 'active' : ''} icon`}
@@ -47,6 +50,7 @@ export default function SidebarLeft() {
         </div>
         <div className="flex flex-col items-center gap-y-2">
           <button
+            aria-label="Open Terminal"
             onClick={() => setIsTerminalOpen(!isTerminalOpen)}
             type="button"
             className="icon"
@@ -54,6 +58,7 @@ export default function SidebarLeft() {
             <Terminal />
           </button>
           <button
+            aria-label="Reload Page"
             onClick={() => window.location.reload()}
             type="button"
             className="icon"

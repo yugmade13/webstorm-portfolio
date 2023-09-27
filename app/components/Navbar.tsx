@@ -20,6 +20,8 @@ export default function Navbar() {
               className={`${link.path === pathname ? 'active-navbar' : ''} relative px-2 h-[41px]`}
             >
               <Link
+                aria-label={link.name}
+                title={link.name}
                 className="h-full flex justify-center items-center gap-x-2"
                 href={link.path}
               >

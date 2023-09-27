@@ -8,13 +8,14 @@ import {
   Book,
   Documents,
   Commit,
-
+  Text
 } from '@/public/icons/';
 
 type NavLinkProps = {
   title: string,
   path: string,
-  icon: string
+  icon: string,
+  name: string
 }
 
 type Project = {
@@ -28,21 +29,25 @@ export const sidebarLinks: NavLinkProps[] = [
     title: 'about.json',
     path: '/about',
     icon: Documents,
+    name: 'About',
   },
   {
     title: 'contact.html',
     path: '/contact',
     icon: Commit,
+    name: 'Contact',
   },
   {
     title: 'projects.jsx',
     path: '/projects',
     icon: Structure,
+    name: 'Projects',
   },
   {
     title: 'articles.md',
     path: '/articles',
     icon: Book,
+    name: 'Articles',
   },
 ];
 
@@ -51,26 +56,37 @@ export const navLinks: NavLinkProps[] = [
     title: 'index.ts',
     path: '/',
     icon: Typescript,
+    name: 'Home',
   },
   {
     title: 'about.json',
     path: '/about',
     icon: Json,
+    name: 'About',
   },
   {
     title: 'contact.html',
     path: '/contact',
     icon: Html,
+    name: 'Contact',
   },
   {
     title: 'projects.jsx',
     path: '/projects',
     icon: Jsx,
+    name: 'Projects',
   },
   {
     title: 'articles.md',
     path: '/articles',
     icon: Markdown,
+    name: 'Articles',
+  },
+  {
+    title: 'resume.pdf',
+    path: '/pdf/resume.pdf',
+    icon: Text,
+    name: 'Resume',
   },
 ];
 

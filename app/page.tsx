@@ -16,7 +16,7 @@ export default function Home() {
               <span className="text-purple-primary">{'const '}</span>
               <span>{'githubLink'}</span>
               <span>{' = '}</span>
-              <span className="text-green-primary break-words">“https://github.com/yugmade13”</span>
+              <span className="text-green-primary break-words">“https://github.com/yugmade13;”</span>
             </p>
           </div>
         </div>

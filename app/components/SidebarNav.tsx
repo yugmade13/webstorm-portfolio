@@ -15,6 +15,7 @@ export default function SidebarNav() {
   return (
     <div className="mt-2">
       <button
+        aria-label="Collapse or Expand"
         onClick={() => setIsFolderOpen(!isFolderOpen)}
         className="flex items-center gap-x-2"
         type="button"
@@ -39,6 +40,8 @@ export default function SidebarNav() {
                 className={`${link.path === pathname ? 'bg-blue2' : ''} pl-10 py-1 rounded-md hover:bg-gray8 hover:bg-opacity-30`}
               >
                 <Link
+                  aria-label={link.name}
+                  title={link.name}
                   className="flex gap-x-2"
                   href={link.path}
                 >
