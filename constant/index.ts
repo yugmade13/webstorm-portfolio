@@ -84,7 +84,7 @@ export const navLinks: NavLinkProps[] = [
   },
   {
     title: 'resume.pdf',
-    path: '/pdf/resume.pdf',
+    path: '/pdf/resume-v2.pdf',
     icon: Text,
     name: 'Resume',
   },
