@@ -56,37 +56,37 @@ export const navLinks: NavLinkProps[] = [
     title: 'index.ts',
     path: '/',
     icon: Typescript,
-    name: 'Home',
+    name: 'index.js',
   },
   {
     title: 'about.json',
     path: '/about',
     icon: Json,
-    name: 'About',
+    name: 'about.json',
   },
   {
     title: 'contact.html',
     path: '/contact',
     icon: Html,
-    name: 'Contact',
+    name: 'contact.html',
   },
   {
     title: 'projects.jsx',
     path: '/projects',
     icon: Jsx,
-    name: 'Projects',
+    name: 'projects.jsx',
   },
   {
     title: 'articles.md',
     path: '/articles',
     icon: Markdown,
-    name: 'Articles',
+    name: 'articels.md',
   },
   {
     title: 'resume.pdf',
     path: '/pdf/resume-v2.pdf',
     icon: Text,
-    name: 'Resume',
+    name: 'resume.pdf',
   },
 ];
 

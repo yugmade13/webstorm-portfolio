@@ -5,7 +5,7 @@ export default function Home() {
         <div className="min-h-[calc(100vh-38px-39px-34px-32px-104px)] flex flex-col justify-center gap-y-20">
           <div className="flex flex-col gap-y-3">
             <span className="text-lg text-gray7">Hai Saya</span>
-            <h1 className="text-6xl">
+            <h1 className="text-5xl md:text-6xl">
               Yugma Dewangga
             </h1>
             <span className="text-xl lg:text-3xl text-gray7">{'> Front-End Web Developer'}</span>
@@ -16,7 +16,7 @@ export default function Home() {
               <span className="text-purple-primary">{'const '}</span>
               <span>{'githubLink'}</span>
               <span>{' = '}</span>
-              <span className="text-green-primary break-words">“https://github.com/yugmade13;”</span>
+              <span className="text-green-primary break-words">“https://github.com/yugmade13”;</span>
             </p>
           </div>
         </div>

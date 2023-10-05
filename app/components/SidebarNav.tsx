@@ -3,7 +3,6 @@
 import { useContext } from 'react';
 import { SidebarContext } from '@/app/sidebar-provider';
 import { usePathname } from 'next/navigation';
-import Image from 'next/image';
 import { Folder, ChevronGap } from '@/public/icons'
 import Link from 'next/link';
 import { navLinks } from '@/constant';
@@ -15,7 +14,7 @@ export default function SidebarNav() {
   return (
     <div className="mt-2">
       <button
-        aria-label="Collapse or Expand"
+        aria-label="webstorm"
         onClick={() => setIsFolderOpen(!isFolderOpen)}
         className="flex items-center gap-x-2"
         type="button"
@@ -44,6 +43,7 @@ export default function SidebarNav() {
                   title={link.name}
                   className="flex gap-x-2"
                   href={link.path}
+                  target={link.title === 'resume.pdf' ? '_blank' : ''}
                 >
                   <Icon />
                   <span>{link.title}</span>
