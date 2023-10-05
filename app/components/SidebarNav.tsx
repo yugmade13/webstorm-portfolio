@@ -24,10 +24,8 @@ export default function SidebarNav() {
           <ChevronGap className={`${isFolderOpen? 'rotate-90' : 'rotate-0'}`} />
           <Folder />
         </div>
-        <div className="flex gap-x-2">
-          <span>webstorm</span>
-          <span className="text-gray7">~/webstorm</span>
-        </div>
+        webstorm
+        <span className="text-gray7">~/webstorm</span>
       </button>
       <div className={`${isFolderOpen ? 'h-auto' : 'h-0'} my-1 overflow-hidden`}>
         <ul className="flex flex-col">

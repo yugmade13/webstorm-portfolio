@@ -80,7 +80,7 @@ export const navLinks: NavLinkProps[] = [
     title: 'articles.md',
     path: '/articles',
     icon: Markdown,
-    name: 'articels.md',
+    name: 'articles.md',
   },
   {
     title: 'resume.pdf',

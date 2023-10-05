@@ -27,7 +27,7 @@ export default function Navbar() {
                 target={link.title === 'resume.pdf' ? '_blank' : '_self'}
               >
                 <Icon />
-                <span>{link.title}</span>
+                {link.title}
                 <CloseSmall className={`${link.path === pathname ? 'visible' : 'invisible'}`} />
               </Link>
             </li>
