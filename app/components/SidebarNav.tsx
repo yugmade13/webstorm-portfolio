@@ -14,6 +14,7 @@ export default function SidebarNav() {
   return (
     <div className="mt-2">
       <button
+        name="Expand or Collapse"
         aria-label="webstorm"
         onClick={() => setIsFolderOpen(!isFolderOpen)}
         className="flex items-center gap-x-2"
@@ -43,10 +44,10 @@ export default function SidebarNav() {
                   title={link.name}
                   className="flex gap-x-2"
                   href={link.path}
-                  target={link.title === 'resume.pdf' ? '_blank' : ''}
+                  target={link.title === 'resume.pdf' ? '_blank' : '_self'}
                 >
                   <Icon />
-                  <span>{link.title}</span>
+                  {link.title}
                 </Link>
               </li>
             );

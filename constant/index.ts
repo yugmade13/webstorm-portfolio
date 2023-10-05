@@ -56,7 +56,7 @@ export const navLinks: NavLinkProps[] = [
     title: 'index.ts',
     path: '/',
     icon: Typescript,
-    name: 'index.js',
+    name: 'index.ts',
   },
   {
     title: 'about.json',

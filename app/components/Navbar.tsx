@@ -24,7 +24,7 @@ export default function Navbar() {
                 title={link.name}
                 className="h-full flex justify-center items-center gap-x-2"
                 href={link.path}
-                target={link.title === 'resume.pdf' ? '_blank' : ''}
+                target={link.title === 'resume.pdf' ? '_blank' : '_self'}
               >
                 <Icon />
                 <span>{link.title}</span>

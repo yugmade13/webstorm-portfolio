@@ -18,7 +18,7 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="w-full max-w-[500px] text-sm">
+    <div className="w-full max-w-[500px] text-sm mt-4">
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col sm:flex-row justify-between items-start">
           <label

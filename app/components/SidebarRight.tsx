@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Notifications, Database } from '@/public/icons';
 
 export default function SidebarRight() {
