@@ -7,9 +7,25 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   const article: Article | undefined = allArticles.find((article: Article) => article._raw.flattenedPath === `articles/${slug}`);
 
+  if (!article) {
+    return notFound();
+  }
+
+  const ogImage = 'https://www.yugma.dev' + article.image;
+
   return {
-    title: article?.title,
-    description: article?.description
+    title: article.title,
+    description: article.description,
+    openGraph: {
+      title: article.title,
+      description: article.description,
+      url: `https://www.yugma.dev/${article?.path}`,
+      images: [
+        {
+          url: ogImage
+        }
+      ],
+    },
   }
 }
 
