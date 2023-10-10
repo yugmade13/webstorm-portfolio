@@ -19,7 +19,7 @@ export default function Footer() {
             <ChevronGap />
             <div className="flex items-center gap-x-1.5">
               <Module />
-              <span>{pathname === '/' ? 'index' : pathname.slice(1)}</span>
+              <span className="block">{pathname === '/' ? 'index' : pathname.split('/')[1]}</span>
             </div>
           </div>
         </div>
