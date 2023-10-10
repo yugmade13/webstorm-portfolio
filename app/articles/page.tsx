@@ -24,7 +24,7 @@ export default function Articles() {
             >
               <div className="relative h-[175px]">
                 <Image
-                  src="/images/mdx.png"
+                  src={article.image}
                   alt="image article"
                   fill={true}
                   sizes="100vw"

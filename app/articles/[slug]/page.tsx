@@ -22,9 +22,49 @@ export default function ArticleDetail({ params }: { params: { slug: string } } )
     return notFound();
   }
 
+  function formatDate(date: string | undefined) {
+    if (!date) {
+      return Date.now();
+    }
+
+    const currentDate = new Date();
+    const targetDate = new Date(date);
+
+    const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
+    const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
+    const daysAgo = currentDate.getDate() - targetDate.getDate();
+
+    let formattedDate = '';
+
+    if (yearsAgo > 0) {
+      formattedDate = `${yearsAgo}tahun yang lalu`;
+    } else if (monthsAgo > 0) {
+      formattedDate = `${monthsAgo}bulan yang lalu`;
+    } else if (daysAgo > 0) {
+      formattedDate = `${daysAgo}hari yang lalu`;
+    } else {
+      formattedDate = 'Hari ini';
+    }
+
+    const fullDate = targetDate.toLocaleString('in-ID', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+
+    return `${fullDate} (${formattedDate})`;
+  }
+
   return (
     <section className="p-4 pb-[116px] min-w-[334px]">
-      <div className="prose prose-sm prose-invert lg:prose-base w-full text-gray7">
+      <div className="prose prose-sm prose-invert w-full text-gray7 mx-auto">
+        <div className="flex flex-col gap-y-4">
+         <div className="flex flex-col gap-y-2">
+           <h1 className="m-0 text-center">{article.title}</h1>
+           <p className="m-0 text-xs text-center">{`${formatDate(article.date)} - Yugma Dewangga`}</p>
+         </div>
+          <p className="m-0">{article.description}</p>
+        </div>
         <Mdx code={article?.body.code} />
       </div>
     </section>

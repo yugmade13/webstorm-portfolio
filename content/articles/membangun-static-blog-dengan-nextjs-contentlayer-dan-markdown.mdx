@@ -1,0 +1,392 @@
+---
+published: true
+title: Membangun static blog dengan Next.js, Contentlayer dan Markdown.
+description: Ada banyak cara untuk membuat sebuah website blog pribadi, dari cara yang termudah sampai dengan cara yang tersusah. Cara yang termudah adalah mendaftar ke sebuah situs Blogging Platforms seperti WordPress, Blogger, Medium, dll. Adapun cara yang tersusah adalah ya buat sendiri!
+image: /images/nextcoma.jpg
+date: 2023-10-10
+---
+
+Pada kesempatan kali ini saya akan menjelaskan bagaimana membangun sebuah website blog pribadi dengan memanfaatkan markdown sebagai isi kontennya. Tentu hal ini juga membutuhkan pemahaman terkait tentang coding dan pemahaman teknis, karena kita akan membangun website menggunakan Framework Next.js dengan memanfaatkan library Contentlayer dan Markdown. Namum sebelum itu kita akan berkenalan terlebih dahulu dengan Contentlayer dan Markdown.
+
+## Berkenalan dengan Contentlayer
+
+Contentlayer adalah sebuah library yang dapat memvalidasi dan mengubah markdown menjadi data JSON yang dapat digunakan untuk aplikasi yang akan kita bangun. Sehingga kita dapat dengan mudah memanfaatkan data JSON tersebut untuk keperluan kita. Hal ini selaras dengan tagline dari Contentlayer sendiri yaitu **“Content made easy for developers”**.
+
+## Memanfaatkan Markdown
+
+Markdown adalah bahasa markah yang lebih ringan dan lebih manusiawi dari pada HTML. Markdown dirancang untuk menulis menggunakan format teks polos yang mudah dibaca dan mudah ditulis. Berbeda dengan penulisan HTML kita perlu menggunakan *tag, element* dan *attribute*, maka dari itu saya katakan lebih manusiawi dari pada HTML. Kita sering menjumpai Markdown pada repository Github dengan nama file `README.md`, biasanya file tersebut berisi deskripsi repository yang kita upload.
+
+## Kita mulai dengan Next.js
+
+Pertama yang akan kita lakukan adalah menginstal Next.js. Disini saya tidak akan menjelaskan apa itu Next.js dan bagaimana cara menggunakannya karena diluar sana banyak sekali tutorial yang bisa anda pelajari. Jadi mari kita mulai dengan :
+
+```shell
+npx create-next-app@latest .
+```
+
+Lalu anda akan dihadapkan pilihan pada terminal sebagai berikut :
+
+```shell
+√ Would you like to use TypeScript? ... Yes
+√ Would you like to use ESLint? ... Yes
+√ Would you like to use Tailwind CSS? ... Yes
+√ Would you like to use `src/` directory? ... No
+√ Would you like to use App Router? (recommended) ... Yes
+√ Would you like to customize the default import alias (@/*)? ... No
+```
+
+Pada tutorial kali ini saya akan menggunakan bahasa pemrograman TypeScript, TailwindCSS sebagai style CSS dan menggunakan konsep App Router pada Next.js.
+
+## Memasang Contentlayer
+
+Selanjutnya kita akan pasang Contentlayer pada Next.js kita, bagaimana cara memasangnya? Tinggal kita tempel menggunakan npm :
+
+```shell
+npm install contentlayer next-contentlayer
+```
+
+### #Konfigurasi next.config.js
+
+Rubahlah konfigurasi pada `next.config.js` menjadi seperti dibawah ini :
+
+```js
+const { withContentlayer } = require('next-contentlayer');
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true
+}
+
+module.exports = withContentlayer(nextConfig);
+```
+
+### #Konfigurasi TypeScript
+
+Apabila anda menggunakan TypeScript, sisipkanlah *kode 1, 2 dan 3* pada konfigurasi `tsconfig.json` yang sudah ada menjadi seperti dibawah ini :
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".", // kode 1
+    // kode lain
+    "paths": {
+      // kode lain
+      "contentlayer/generated": ["./.contentlayer/generated"] // kode 2
+    }
+  },
+  "include": [
+    // kode lain
+    ".contentlayer/generated" // kode 3
+  ]
+}
+```
+
+### #.gitignore
+
+Lalu pada `.gitignore` tambhakanlah `.contentlayer` untuk mengabaikan folder contentlayer
+
+```gitignore
+# contentlayer
+.contentlayer
+```
+
+Apabila kita lihat pada struktur folder proyek Next.js kita tidak terdapat folder yang bernama contentlayer, hal itu karena kita belum menjalankan proyek kita. Sebelum itu kita akan lanjut terlebih dahulu untuk mendefinisikan skema konten kita.
+
+### #Mendefinisikan Skema Konten dan Konfigurasi
+
+Kita buat terlebih dahulu file `contentlayer.config.js` didalam root directory yang sejajar dengan  `next.config.js`, lalu kita isikan kode seperti dibawah ini :
+
+```js
+import { defineDocumentType, makeSource } from 'contentlayer/source-files'
+
+export const Post = defineDocumentType(() => ({
+  name: 'Post',
+  filePathPattern: `**/*.md`,
+  fields: {
+    title: {
+      type: 'string',
+      required: true,
+    },
+		description: {
+      type: 'string',
+      required: true,
+    },
+		author: {
+      type: 'string',
+      required: true,
+    },
+  },
+  computedFields: {
+    url: {
+      type: 'string',
+      resolve: (post) => `/posts/${post._raw.flattenedPath}`,
+    },
+  },
+}));
+
+export default makeSource({
+  contentDirPath: 'posts',
+  documentTypes: [Post],
+});
+```
+
+Saya akan jelaskan kegunaan kode di atas sebagai berikut :
+
+- `defineDocumentType` digunakan untuk medefinisikan skema atau model seperti apakah yang nantinya akan kita buat.
+- `makeSource` digunakan untuk memberikan kepada Contentlayer skema dan konfigurasi yang telah kita buat pada `documentType`.
+-  Kita membuat fungsi `Post` dan mendefinisikan skema dengan `name: ‘Post’` . Perlu diingat bahwa nama inilah yang nantinya akan kita panggil ketika akan mengambil data JSON dari `‘contentlayer/generated’`.
+- `contentDirpath` digunakan untuk menamai folder koten yang akan kita buat, apabila kita isikan `‘posts’`, maka kita harus membuat folder bernama posts pada *root directory*. nama folder ini tidak harus posts, kita bisa membuatnya dengan nama *articles, blogs* atau yang lain. Kali ini saya akan memberikan nama posts.
+- `filePathPattern` adalah isi dari folder yang sudah kita buat pada `contentDirPath` , ``**/*.md`` artinya kita ambil file dengan format `.md` dari folder apapun didalam folder posts. atau kita juga bisa merubahnya menjadi lebih spesifik seperti ini ``articles/*.md`` , artinya kita hanya akan mengambil file dengan format `.md` dari folder `posts/articles/**.md`.
+-  Pada bagian `fields` kita mendefinisikan *frontmatter, frontmatter* adalah bagian dari dokumen Markdown yang biasanya berisi informasi seperti *title, description, author, date* dan *tags*. pada contoh diatas saya hanya mengisinya dengan *title, description* dan *author* yang mempunyai tipe data string.
+- `computedFields` bisa dibilang untuk membuat output url path dari konten yang sudah kita buat.
+- `documentTypes` digunakan untuk menangkap fungsi yang sudah kita definisikan skema atau modelnya, kenapa menggunakan array? karena kita dapat membuat lebih dari satu fungsi untuk medefinisikan skema, akan tetapi pada kesempatan kali ini saya hanya membuat satu.
+
+### #Membuat konten
+
+Sebelum membuat konten kita harus membuat terlebih dahulu sebuah folder bernama `posts` dalam *root directory*. Apabila sudah kita akan membuat dua buah file `.md` didalam folder posts. Kira - kira folder kita seperti ini :
+
+```text
+└── <project-name>/
+    ├── app
+    ├── node_module
+    ├── posts/
+    │   ├── -membangun-web-dengan-nextjs.md
+    │   └── -membuat-blog-post.md
+    ├── public
+    ├── eslint.json
+    ├── .gitignore
+    ├── contentlayer.config.js
+    ├── next.config.js
+    ├── next-env.d.ts
+    ├── package.json
+    ├── package-lock.json
+    ├── postcss.config.js
+    ├── README.md
+    ├── tailwind.config.ts
+    └── config.json
+```
+
+Setelah file `.md` dibuat, isikan file tersebut seperti dibawah ini :
+
+`membangun-web-dengan-nextjs.md`
+```markdown
+---
+title: Membangun web dengan Next.js
+description: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi architecto excepturi ipsam perferendis totam voluptates?
+author: Yugma Dewangga
+---
+
+Ini adalah penulisan paragraf dari judul *Membangun web dengan Next.js*
+
+- Ini adalah list 1
+- Ini adalah list 2
+- Ini adalah list 3
+- Ini adalah list 4
+
+Ini adalah [Link Github](https://github.com/yugmade13).
+```
+
+`membuat-blog-post.md`
+```markdown
+---
+title: Membuat Blog Posts
+description: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, omnis?
+author: Yugma Dewangga
+---
+
+Ini adalah penulisan paragraf dari judul *Membuat Blog Posts*
+
+- Ini adalah list 1
+- Ini adalah list 2
+- Ini adalah list 3
+- Ini adalah list 4
+
+Ini adalah [Link Github](https://github.com/yugmade13).
+```
+
+### #Mencoba menjalankan
+
+Ketika semua konfigurasi sudah siap, coba kita jalankan proyek kita.
+
+```shell
+npm run dev
+```
+
+Apabila berhasil, maka akan muncul kalimat `Generated 2 documents in .contentlayer` pada terminal kita. Jika kita amati pada struktur proyek kita, maka akan muncul dua folder baru yaitu folder `.next` dan `contentlayer`.
+
+```text
+<project-name>/
+    ├── contentlayer/
+    │   ├── cache
+    │   ├── generated/
+    │   │   ├── Post/
+    │   │   │   ├── _index.json
+    │   │   │   ├── _index.mjs
+    │   │   │   ├── membangun-web-dengan-nextjs.md.json
+    │   │   │   └── membuat-blog-post.md.json
+    │   │   ├── index.d.ts
+    │   │   ├── index.mjs
+    │   │   └── types.d.ts
+    │   └── package.json
+    ├── next
+```
+
+Apabila sudah seperti ini berarti kita telah berhasil mengubah file `.md` kita menjadi file berformat `.json`, coba kita lihat pada directory folder `contentlayer/generated/Post` yang didalamnya terdapat hasil dari kerja library Contentlayer yang telah kita pasang pada proyek kita. Dengan seperti ini kita akan lebih mudah untuk mengambil data JSON untuk kita gunakan pada proyek kita. Tidak hanya itu, coba kita buka salah satu file yang berformat `.json` pada folder Post.
+
+```json
+{
+  "title": "Membangun web dengan Next.js",
+  "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi architecto excepturi ipsam perferendis totam voluptates?",
+  "author": "Yugma Dewangga\r",
+  "body": {
+    "raw": "\r\nIni adalah penulisan paragraf dari judul *Membangun web dengan Next.js*\r\n\r\n- Ini adalah list 1\r\n- Ini adalah list 2\r\n- Ini adalah list 3\r\n- Ini adalah list 4\r\n\r\nIni adalah [Link Github](https://github.com/yugmade13).",
+    "html": "<p>Ini adalah penulisan paragraf dari judul <em>Membangun web dengan Next.js</em></p>\n<ul>\n<li>Ini adalah list 1</li>\n<li>Ini adalah list 2</li>\n<li>Ini adalah list 3</li>\n<li>Ini adalah list 4</li>\n</ul>\n<p>Ini adalah <a href=\"https://github.com/yugmade13\">Link Github</a>.</p>"
+  },
+  "_id": "membangun-web-dengan-nextjs.md",
+  "_raw": {
+    "sourceFilePath": "membangun-web-dengan-nextjs.md",
+    "sourceFileName": "membangun-web-dengan-nextjs.md",
+    "sourceFileDir": ".",
+    "contentType": "markdown",
+    "flattenedPath": "membangun-web-dengan-nextjs"
+  },
+  "type": "Post",
+  "url": "/posts/membangun-web-dengan-nextjs"
+}
+```
+
+Perhatikan pada key `html`, Ajaibnya adalah Contentlayer juga merubah file Markdown kita menjadi format HTML mentah, mari sekarang kita  tempel pada proyek kita.
+
+## Fokus pada Routes, UI dan memanggil allPosts
+
+### #Membuat Routes
+
+Kita buat sebuah routes pada aplikasi kita, karena next.js yang saya gunakan adalah versi 13 maka saya akan membuatnya dengan konsep App Routes. berikut adalah routes yang saya buat.
+
+```text
+├── app/
+    │   ├── posts/
+    │   │   ├── [slug]/
+    │   │   │   └── page.tsx
+    │   │   └── page.tsx
+    │   ├── favicon.ico
+    │   ├── globals.css
+    │   ├── layout.tsx
+    │   └── page.tsx
+```
+
+### #Membuat UI dan memanggil allPosts
+
+Selanjutnya kita buat UI proyek kita menggunakan TailwindCSS  yang sudah kita instal dari awal bersama Next.js. Tapi sebelumnya, silahkan hapus style pada `globals.css` dan sisakan kode tailwind berikut ini :
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+Dengan begitu ketika kita mengakses http://localhost:3000/posts maka tampilan akan menjadi blank atau putih bersih.
+
+Berikutnya kita akan buat tampilan halaman posts, silahkan buka folder `posts/page.tesx` dan isikan seperti kode dibawah ini :
+
+```tsx
+import Link from 'next/link';
+import { allPosts, Post } from 'contentlayer/generated';
+
+export default function Posts() {
+  return (
+    <section className="mx-auto max-w-xl">
+      <h1 className="text-3xl text-center font-bold mt-4">
+        Personal Blog Posts
+      </h1>
+      <div className="mt-8 flex flex-col gap-y-4">
+        {allPosts.map((post: Post) => (
+          <Link href={post.url}>
+            <h2 className="text-lg font-bold">
+              {post.title}
+            </h2>
+            <p className="text-base text-gray-500">
+              {post.description}
+            </p>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+```
+
+Kita telah meng-import `allPosts` dan Post dari `‘contentlayer/generated’`. Jika kalian masih ingat, sebelumnya kita telah mendefinisikan `name: ‘Post’` pada `defineDocumentType`, maka dari itu Contentlayer akan merubahnya menjadi kata jamak dan cara memanggilnya adalah dengan menuliskan `allPosts`. Apabila nama pada `defineDocumentType` kita rubah misalkan menjadi *article*, maka cara memanggilnya adalah dengan menuliskan `allArticles`.
+
+- `allPosts` berisi data array JSON dari konten yang sudah kita tulis, apabila kita buka file pada folder `contentlayer/generated/Post/_index.json`, maka datanya akan sama persis seperti itu. Data tersebut di-generated oleh Contentlayer dari konten yang sudah kita buat.
+- `Post` adalah tipe data dari `allPosts`, karena saya disini menggunakan TypeScript, apabila kalian menggunakan JavaScript saya kira tidak perlu meng-importnya.
+
+UI yang telah kita buat maka akan menjadi seperti dibawah ini :
+
+![Posts page!](/images/posts-page.png "posts page")
+
+Setelah itu kita akan buat UI dari file `posts/[slug]/page.tsx` seperti dibawah ini :
+
+```tsx
+import { allPosts, Post } from 'contentlayer/generated';
+
+export const generateStaticParams = async () => allPosts.map((post: Post) => ({ slug: post._raw.flattenedPath }));
+
+export default function Post({ params }: { params: { slug: string } }) {
+  const post: Post | undefined = allPosts.find((post: Post) => post._raw.flattenedPath === params.slug);
+
+  if (!post) throw new Error(`Post not found for slug: ${params.slug}`)
+
+  return (
+    <section className="mx-auto max-w-xl">
+      <h1 className="text-2xl text-center font-bold mt-8">
+        {post.title}
+      </h1>
+      <p className="text-base text-gray-500 text-center">
+        {post.description}
+      </p>
+      <p className="text-xs text-gray-400 text-center">
+        {`By ${post.author}`}
+      </p>
+      <div className="mt-8" dangerouslySetInnerHTML={{ __html: post.body.html }} />
+    </section>
+  );
+}
+```
+
+Saya tidak akan menjelaskan akan menjelaskan terkait fungsi atau method dari Next.js satu per satu, karena saya berasumsi ketika kalian membaca tutorial ini pasti sudah tahu tentangNext.js.
+
+Kalian mungkin sedikit asing dengan `dangerouslySetInnerHTML`, itu adalah properti pada JSX yang digunakan untuk menyisipkan HTML mentah kedalam komponen. Karena isi dari post.body.html berupa HTML yang sebelumnya sudah kita bahas diatas.
+
+> Note :
+> 
+> Jika kita amati pada web browser, ada yang janggal dengan style UI yang kita buat. Yups, itu karena kita menggunakan TailwindCSS. secara default TailwindCSS akan me-reset CSS yang menghilangkan style default dari browser. Maka solusinya adalah dengan menggunakan **@tailwindcss/typography**
+
+Sekarang kita instal terlebih dahulu @tailwindcss/typography :
+
+```shell
+npm install -D @tailwindcss/typography
+```
+
+Setelah itu kita pergi ke `tailwind.config.ts`, kita tambahkan `require('@tailwindcss/typography')` pada `plugins` sehingga menjadi seperti ini :
+
+```ts
+plugins: [require('@tailwindcss/typography')]
+```
+
+Setelah itu kita kembali ke `posts/[slug]/page.tsx` kita tambahkan sedikit bumbu pada `className` pada JSX dimana file mentah HTML kita disisipkan. Maka kode nya menjadi seperti ini :
+
+```tsx
+<div className="mt-8 prose" dangerouslySetInnerHTML={{ __html: post.body.html }} />
+```
+
+Jika sudah kita buka kembali pada web browser kita maka tampilannya akan menjadi seperti ini :
+
+![Posts page!](/images/posts-slug-page.png "posts slug page")
+
+Sedikit lebih cantik bukan?
+
+Berikut adalah tutorial yang saya buat tentang bagaimana cara Membangun static blog dengan Next.js, Contentlayer dan Markdown. Mungkin pada tutorial berikutnya saya akan menjelaskan bagaimana mengintegrasikan MDX pada web static kita. Terima Kasih 👌
+
+Source github disini:  https://github.com/yugmade13/next-contentlayer
