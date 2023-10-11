@@ -53,16 +53,16 @@ export default function ArticleDetail({ params }: { params: { slug: string } } )
     let formattedDate = '';
 
     if (yearsAgo > 0) {
-      formattedDate = `${yearsAgo}tahun yang lalu`;
+      formattedDate = `${yearsAgo} tahun yang lalu`;
     } else if (monthsAgo > 0) {
-      formattedDate = `${monthsAgo}bulan yang lalu`;
+      formattedDate = `${monthsAgo} bulan yang lalu`;
     } else if (daysAgo > 0) {
-      formattedDate = `${daysAgo}hari yang lalu`;
+      formattedDate = `${daysAgo} hari yang lalu`;
     } else {
       formattedDate = 'Hari ini';
     }
 
-    const fullDate = targetDate.toLocaleString('in-ID', {
+    const fullDate = targetDate.toLocaleString('id-ID', {
       month: 'long',
       day: 'numeric',
       year: 'numeric',
