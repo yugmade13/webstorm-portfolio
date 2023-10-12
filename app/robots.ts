@@ -5,7 +5,6 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/'
       },
     ],
     sitemap: 'https://www.yugma.dev/sitemap.xml',

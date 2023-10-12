@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Artikel',
-  description: 'Baca beberapa tulisan saya',
+  description: 'Beberapa artiikel yang saya tulis',
 };
 
 export default function Articles() {

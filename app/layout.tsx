@@ -16,14 +16,25 @@ export const metadata: Metadata = {
     default: 'Yugma Dewangga',
     template: '%s | Yugma Dewangga',
   },
-  description: 'Saya Yugma Dewangga, Saya adalah seorang Front End Web Developer yang berpengalaman mengembangkan web menggunakan React dan Next.js',
+  description: 'Saya Yugma Dewangga, Saya adalah seorang Web Developer yang berpengalaman mengembangkan web menggunakan bahasa pemrograman JavaScript, TypeScript dan PHP.',
   openGraph: {
     title: 'Yugma Dewangga',
-    description: 'Saya Yugma Dewangga, Saya adalah seorang Front End Web Developer yang berpengalaman mengembangkan web menggunakan React dan Next.js',
+    description: 'Saya Yugma Dewangga, Saya adalah seorang Web Developer yang berpengalaman mengembangkan web menggunakan bahasa pemrograman JavaScript, TypeScript dan PHP.',
     url: 'https://www.yugma.dev',
     siteName: 'Yugma Dewangga',
     locale: 'id-ID',
     type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    }
   },
   verification: {
     google: 'WU1WoM-DuB5UYeDD6Kx0e6zn6pHDyaPGk5w6xDTt-wc'

@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     (route) => ({
       url: `https://www.yugma.dev/${route}`,
       lastModified: new Date().toISOString().split('T')[0],
-    })
+    }),
   );
 
   return [...routes, ...articles];

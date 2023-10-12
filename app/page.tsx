@@ -8,7 +8,7 @@ export default function Home() {
             <h1 className="text-5xl md:text-6xl">
               Yugma Dewangga
             </h1>
-            <span className="text-xl lg:text-3xl text-gray7">{'> Front-End Web Developer'}</span>
+            <span className="text-xl lg:text-3xl text-gray7">{'> Web Developer'}</span>
           </div>
           <div className="flex flex-col gap-y-4 text-sm lg:text-base">
             <p className="text-gray7">{'// anda dapat melihat proyek github saya disini'}</p>
