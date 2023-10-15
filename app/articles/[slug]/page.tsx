@@ -29,46 +29,46 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export const generateStaticParams = async () => allArticles.map((article: Article) => ({ slug: article._raw.flattenedPath }))
+export const generateStaticParams = async () => allArticles.map((article: Article) => ({ slug: article._raw.flattenedPath }));
+
+function formatDate(date: string | undefined) {
+  if (!date) {
+    return Date.now();
+  }
+
+  const currentDate = new Date();
+  const targetDate = new Date(date);
+
+  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
+  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
+  const daysAgo = currentDate.getDate() - targetDate.getDate();
+
+  let formattedDate = '';
+
+  if (yearsAgo > 0) {
+    formattedDate = `${yearsAgo} tahun yang lalu`;
+  } else if (monthsAgo > 0) {
+    formattedDate = `${monthsAgo} bulan yang lalu`;
+  } else if (daysAgo > 0) {
+    formattedDate = `${daysAgo} hari yang lalu`;
+  } else {
+    formattedDate = 'Hari ini';
+  }
+
+  const fullDate = targetDate.toLocaleString('id-ID', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+  return `${fullDate} (${formattedDate})`;
+}
 
 export default function ArticleDetail({ params }: { params: { slug: string } } ) {
   const article: Article | undefined = allArticles.find((article: Article) => article._raw.flattenedPath === `articles/${params.slug}`);
 
   if(!article) {
     return notFound();
-  }
-
-  function formatDate(date: string | undefined) {
-    if (!date) {
-      return Date.now();
-    }
-
-    const currentDate = new Date();
-    const targetDate = new Date(date);
-
-    const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-    const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-    const daysAgo = currentDate.getDate() - targetDate.getDate();
-
-    let formattedDate = '';
-
-    if (yearsAgo > 0) {
-      formattedDate = `${yearsAgo} tahun yang lalu`;
-    } else if (monthsAgo > 0) {
-      formattedDate = `${monthsAgo} bulan yang lalu`;
-    } else if (daysAgo > 0) {
-      formattedDate = `${daysAgo} hari yang lalu`;
-    } else {
-      formattedDate = 'Hari ini';
-    }
-
-    const fullDate = targetDate.toLocaleString('id-ID', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-
-    return `${fullDate} (${formattedDate})`;
   }
 
   return (
