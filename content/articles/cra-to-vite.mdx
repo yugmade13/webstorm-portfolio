@@ -1,0 +1,456 @@
+---
+published: true
+title: Migrasi React - Dari CRA ke Vite, Class ke Function, Javascript ke Typescript.
+description: Banyak pengembang React mulai beralih dari Create React App (CRA) ke Vite, sebuah alat pengembangan yang menawarkan kinerja yang lebih cepat dan pengalaman pengembangan yang lebih mulus. Kali ini kita akan menjelajahi proses migrasi dari CRA ke Vite, Class ke Function, Javascript ke Typescript dan beserta tantangan yang mungkin dihadapi dalam proses migrasi.
+image: /images/cra-to-vite.jpg
+date: 2024-03-26
+---
+
+Dibawah ini terdapat sebuah sampel proyek sederhana yang sudah saya sediakan. Anggaplah kita akan migrasi proyek yang sudah dibuat dan sudah berjalan, kita tinggal melakukan clone atau download. Spesifikasi yang saya gunakan adalah sebagai bereikut:
+
+- Create React App
+- Node Version ^18.18.0
+- arn Versionn ^1.22.21
+
+Repositori : https://github.com/yugmade13/ex-migration
+
+Migrasi proyek memang gampang - gampang susah, semua tergantung pada kompleksitas dan juga kemudahaan pembacaan kode dalam sebuah proyek karena setiap developer mempunyai ciri khasnya masing - masing ketika menulis kode. Apabila hal ini terjadi maka lebih baik untuk menyepakati bersama standar penulisan kode dengan tim menggunakan linting.
+
+## CRA menjadi Vite.js
+
+Yang pertama kita lakukan adalah menghapus library `react-scripts`. Ini adalah sebuah library bawaan yang digunakan untuk proses build dan konfiigurasi Create React App. Karena kita akan migrasi ke Vite kita tidak perlu menggunakannya.
+
+```shell
+yarn remove react-scripts
+```
+
+Lalu kita install library dari Vite.js sebagai pengganti `react-scripts`.
+
+```shell
+yarn add vite @vitejs/plugin-react
+```
+
+Create React App menempatkan file `index.html` didalam folder _public_ sebagai _entry point_. Berbeda dengan Vite yang menempatkan file `index.html` di _root_ folder. Maka dari itu kita harus memindahkannya sehingga berada di _root_ folder atau setara dengan `package.json` dan merubahnya menjadi seperti dibawah ini. Coba kalian cermati perbedaannya.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+```
+
+Setelah itu kita buat file `vite.config.ts` didalam root folder, file ini adalah konfigurasi proyek Vite yanng digunakan untuk mengatur berbagai aspek pengembanngan menggunnakan Vite.
+
+```ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+});
+```
+
+Lalu buat file didalat folder _src_ dengan nama `vite-env.d.ts`.
+
+```ts
+/// <reference types="vite/client" />
+```
+
+Setelah itu kita rubah scripts pada `package.json`, dan kita hapus juga yang tidak kita gunakan sehingga menjadi seperti ini.
+
+```json
+{
+  "name": "ex-migration",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite": "^5.2.4",
+    "web-vitals": "^2.1.0"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1"
+  }
+}
+```
+
+Lalu kita tambahkan file `tsconfig.json` untuk konfigurasi Typescript seperti ini.
+
+```json
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "ESNext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}
+```
+
+Kalau kita jalankan proyek kita pasti masih terdapat error karena kita perlu merubah ekstensi file `index.js` menjadi `index.tsx` dan `App.js` menjadi `App.jsx`. Dan sebelum kita jalankan pastikan struktur folder kita menjadi seperti ini.
+
+```text
+.
+├── node_modules
+├── public
+├── src/
+│   ├── components/
+│   │   ├── Card.jsx
+│   │   └── Header.jsx
+│   ├── utils/
+│   │   └── faker.js
+│   ├── App.jsx
+│   ├── index.css
+│   ├── index.tsx
+│   └── vite-env.d.ts
+├── .gitignore
+├── index.html
+├── package.json
+├── README.md
+├── tsconfig.json
+├── vite.config.ts
+└── yarn.lock
+```
+
+Lalu jalankan..
+
+```shell
+yarn start
+```
+
+> **Penting:**
+> Apabila masih menemui masalah pada `prop-types`, silahkan install terlebih dahulu pada terminal `yarn add prop-types —dev`. lalu jalakan ulang
+
+## Class Component to Functional Component
+
+Ketika melakukan migrasi, kita dapat memilih mana yang perlu kita rubah, class ke function atau `.jsx` ke `.tsx` terlebih dahulu. Pada tutorial kali ini saya akan memilih merubah class ke function terlebih dahulu karena saya lebih familiar dengan functional component dari pada class component.
+
+Yang perlu diperhatikan ketika merubah class component ke functional component adalah pada lifecycle dan komponen itu sendiri. Semakin kompleks sebuah komponen maka kita harus semakin teliti saat ingin merubahnya.
+
+Saya asumsikann pembaca sudah tahu tentang bagaimana lifecycle atau siklus hidup react. Berikut ini adalah perbuhan dari Class Component ke Functional Component.
+
+**Class Components Header**
+
+```jsx
+import { Component } from 'react';
+
+class Header extends Component {
+  render() {
+    return (
+      <header>
+        <h1>Ex - Migration</h1>
+      </header>
+    );
+  }
+}
+
+export default Header;
+```
+
+**Functional Component Header**
+
+```jsx
+function Header() {
+  return (
+    <header>
+      <h1>Ex - Migration</h1>
+    </header>
+  );
+}
+
+export default Header;
+```
+
+**Class Component Card**
+
+```jsx
+import { Component } from 'react';
+import PropTypes from 'prop-types';
+
+class Card extends Component {
+  render() {
+    const { name, avatar } = this.props;
+
+    return (
+      <div className="card-item">
+        <img className="avatar" src={avatar} alt={`av-${name}`} />
+        <div className="name">{name}</div>
+      </div>
+    );
+  }
+}
+
+export default Card;
+
+Card.propTypes = {
+  name: PropTypes.string,
+  avatar: PropTypes.string,
+};
+```
+
+**Functional Component Card**
+
+```jsx
+import PropTypes from 'prop-types';
+
+function Card({ name, avatar }) {
+  return (
+    <div className="card-item">
+      <img className="avatar" src={avatar} alt={`av-${name}`} />
+      <div className="name">{name}</div>
+    </div>
+  );
+}
+
+export default Card;
+
+Card.propTypes = {
+  name: PropTypes.string,
+  avatar: PropTypes.string,
+};
+```
+
+**Class Component App**
+
+```jsx
+import { Component } from 'react';
+import Header from './components/Header';
+import Card from './components/Card';
+import { makeData } from './utils/faker';
+
+class App extends Component {
+  state = {
+    data: [],
+  };
+
+  componentDidMount() {
+    this.setState({
+      data: makeData(10),
+    });
+  }
+
+  render() {
+    const { data } = this.state;
+
+    if (data.length === 0) {
+      return (
+        <div className="container">
+          <div className="loading">Loading...</div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="container">
+        <Header />
+        <div className="card-list">
+          {data.map((item) => (
+            <Card key={item.name} {...item} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+**Functional Component App**
+
+```jsx
+import { useEffect, useState } from 'react';
+import Header from './components/Header';
+import Card from './components/Card';
+import { makeData } from './utils/faker';
+
+function App() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData(makeData(10));
+  }, []);
+
+  if (data.length === 0) {
+    return (
+      <div className="container">
+        <div className="loading">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container">
+      <Header />
+      <div className="card-list">
+        {data.map((item) => (
+          <Card key={item.name} {...item} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Javascript to Typescript
+
+Kita sudah merubah class menjadi function, saatnnya kita merubah javascript/jsx ke typescript/tsx. Yang perlu diperhatikan disini adalah soal tipe data. Sebetulnya react sudah menyediakan prop-types untuk mendefinisikan tipe data pada props ketika kita meggunakan .jsx, tapi itu hanya opsional. prop-types sangat membantu kita untuk migrasi ke .tsx karena kita tidak perlu menngira - ngira atau mengetikan console.log() terlebih dahulu untuk melihat tipe datanya. Lalu bagaiman dengan file javascript yang berisi sebuah logika fungsi? Ya mau tidak mau kita harus memeriksanya. Berikut adalah perubahan setelah migrasi ke typescript atau .tsx
+
+Pada `faker.ts` kita mendefinisikan tipe data Person yang akan kita gunakan.
+
+```ts
+export type Person = {
+  name: String;
+  avatar: string;
+};
+```
+
+`faker.ts`
+
+```ts
+import { faker } from '@faker-js/faker';
+
+export type Person = {
+  name: String;
+  avatar: string;
+};
+
+const range = (len: number) => {
+  const arr = [];
+  for (let i = 0; i < len; i++) {
+    arr.push(i);
+  }
+  return arr;
+};
+
+const newPerson = (): Person => {
+  return {
+    name: faker.person.fullName(),
+    avatar: faker.image.avatar(),
+  };
+};
+
+export function makeData(...lens: number[]) {
+  const makeDataLevel = (depth = 0): Person[] => {
+    const len = lens[depth];
+
+    return range(len).map((d) => {
+      return {
+        ...newPerson(),
+        subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
+      };
+    });
+  };
+
+  return makeDataLevel();
+}
+```
+
+`Header.tsx`
+
+```tsx
+function Header() {
+  return (
+    <header>
+      <h1>Ex - Migration</h1>
+    </header>
+  );
+}
+
+export default Header;
+```
+
+`Card.tsx`
+
+```tsx
+import { Person } from '../utils/faker';
+
+function Card({ name, avatar }: Person) {
+  return (
+    <div className="card-item">
+      <img className="avatar" src={avatar} alt={`av-${name}`} />
+      <div className="name">{name}</div>
+    </div>
+  );
+}
+
+export default Card;
+```
+
+`App.tsx`
+
+```tsx
+import { useEffect, useState } from 'react';
+import Header from './components/Header';
+import Card from './components/Card';
+import { makeData, Person } from './utils/faker';
+
+function App() {
+  const [data, setData] = useState<Person[]>([]);
+
+  useEffect(() => {
+    setData(makeData(10));
+  }, []);
+
+  if (data.length === 0) {
+    return (
+      <div className="container">
+        <div className="loading">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container">
+      <Header />
+      <div className="card-list">
+        {data.map((item: Person, index: number) => (
+          <Card key={index} {...item} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Terima kasih telah berkunjung 🙏
